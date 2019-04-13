@@ -4,6 +4,78 @@
     Homepage
 {% endblock %}
 
-{% block content %}
 
+
+{% block content %}
+    <div class="wrap-around-all-content">
+
+        <h1>Star Wars universe planets</h1>
+
+        <div class="wrap-around-btns">
+            <button type="button" class="btn btn-primary" id="btn-prev" onclick="clearTable()">Previous</button>
+            <button type="button" class="btn btn-primary" id="btn-next" onclick="clearTable()">Next</button>
+            <div id="loading"></div>
+        </div>
+
+        <div class="wrap-around-table"></div>
+        <table id="planets-table" align="center">
+            <tr>
+                <th>Name</th>
+                <th>Diameter</th>
+                <th>Climate</th>
+                <th>Terrain</th>
+                <th>Surface Water Percentage</th>
+                <th>Population</th>
+                <th>Residents</th>
+                <th></th>
+            </tr>
+            {% for i in range(10) %}
+                <tr>
+                    <td id="name{{ i }}"></td>
+                    <td id="diameter{{ i }}"></td>
+                    <td id="climate{{ i }}"></td>
+                    <td id="terrain{{ i }}"></td>
+                    <td id="surface-water{{ i }}"></td>
+                    <td id="population{{ i }}"></td>
+                    <td id="residents{{ i }}"></td>
+                    <td></td>
+                </tr>
+            {% endfor %}
+
+
+        </table>
+    </div>
+
+    <div class="modal fade bd-example-modal-xl" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+         aria-hidden="true" onclick="clearModal()">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title"></h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close" onclick="clearModal()">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <table id="modal-table" align="center">
+                        <tr id="modal-headers">
+                            <th>Name</th>
+                            <th>Height</th>
+                            <th>Mass</th>
+                            <th>Hair color</th>
+                            <th>Skin color</th>
+                            <th>Eye color</th>
+                            <th>Birth Year</th>
+                            <th>Gender</th>
+                        </tr>
+                    </table>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal" id="clear-modal"
+                            onclick="clearModal()">Close
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
 {% endblock %}

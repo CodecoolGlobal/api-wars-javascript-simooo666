@@ -1,0 +1,36 @@
+.wrap-around-all-content{
+    padding: 5px 50px;
+}
+
+.wrap-around-btns{
+    padding: 10px 0px;
+}
+
+table, th, td {
+    border: 1px solid black;
+    text-align: center;
+
+}
+table{
+    width: 100%;
+}
+th, td {
+    width: 1%;
+}
+
+.wrap-around-logged-in-as{
+    padding-right: 25px;
+}
+
+.wrap-around-btns{
+    float: left;
+    display: inline-block;
+    overflow: hidden;
+}
+
+#loading{
+    float: right;
+    display: inline-block;
+
+}
+
