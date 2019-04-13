@@ -1,0 +1,29 @@
+{% extends 'layout.html' %}
+
+{% block content %}
+    <form action="{{ url_for('registration') }}" name="reg" method="post">
+    <h1 align="center">{{ message }}</h1>
+        <label>
+            <p class="label-txt">CREATE A USERNAME</p>
+            <input required type="text" class="input" name="user_name" value="{{ usrnm }}">
+            <div class="line-box">
+                <div class="line"></div>
+            </div>
+        </label>
+        <label>
+            <p class="label-txt">CREATE A PASSWORD</p>
+            <input required type="password" class="input" name="pass1">
+            <div class="line-box">
+                <div class="line"></div>
+            </div>
+        </label>
+        <label>
+            <p class="label-txt">CONFIRM PASSWORD</p>
+            <input required type="password" class="input" name="pass2">
+            <div class="line-box">
+                <div class="line"></div>
+            </div>
+        </label>
+        <button type="submit">Register</button>
+    </form>
+{% endblock %}

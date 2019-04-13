@@ -1,7 +1,6 @@
 let sourceOfPlanets = "https://swapi.co/api/planets";
 let loadingSign = document.querySelector('#loading');
 
-/**
 let showPlanetNames = function (linkOfTheSource) {
     $.get(linkOfTheSource, function (data) {
         for (let i = 0; i < data.results.length; i++) {
@@ -26,25 +25,22 @@ let showPlanetNames = function (linkOfTheSource) {
     fillUpModalOnResidentBtnClick(linkOfTheSource)
 };
 
-**/
 let fillUpModalOnResidentBtnClick = function (sourceLink) {
     let planetTable = document.querySelector('#planets-table');
     let modalTable = document.querySelector('#modal-table');
     let modalTitle = document.querySelector('.modal-title');
     planetTable.addEventListener('click', function (e) {
+        clearModal();
+        console.log('target: '+ e.target);
         $.get(sourceLink, function (data) {
             console.log('target egy ' + data.results[0].residents);
-            console.log('target ketto ' + data.results[0].residents);
             if (e.target.parentNode.tagName === "TD") {
-                console.log('target if utan ' + data.results[0].residents);
                 let orderNumberFromDataAttribute = e.target.parentNode.getAttribute('data-order');
                 modalTitle.innerText = 'Residents of ' + data.results[orderNumberFromDataAttribute].name;
                 let chosenArray = data.results[orderNumberFromDataAttribute].residents;
-                console.log('for elott ' + data.results[0].residents);
-                debugger;
-                for (let j = 0; j < chosenArray.length; j++) {
-                    $.get(chosenArray[j], function (resident) {
-                        console.log(resident);
+                for (let i = 0; i < data.results[orderNumberFromDataAttribute].residents.length; i++) {
+                    $.get(data.results[orderNumberFromDataAttribute].residents[i], function (resident) {
+                        console.log( resident);
                         modalTable.insertAdjacentHTML('beforeend', `<tr> 
                                                                                     <td> ${resident.name}</td>
                                                                                     <td> ${resident.height}</td>
@@ -57,6 +53,7 @@ let fillUpModalOnResidentBtnClick = function (sourceLink) {
                                                                                 </tr>`)
                     });
                 }
+
             }
         });
     });
@@ -86,7 +83,7 @@ let clearTable = function () {
 };
 
 
-let j = 0;
+let j = 1;
 
 
 let eventListeners = function () {
@@ -117,11 +114,11 @@ let eventListeners = function () {
                         }
                     }
                     console.log(j);
-                    console.log(j);
                     console.log(data);
                     loadingSign.innerHTML = '';
                 });
                 fillUpModalOnResidentBtnClick("https://swapi.co/api/planets/?page=" + j);
+
             } else if (e.target.id === 'btn-prev' && j > 1) {
                 loadingSign.innerHTML = '<i class="fa fa-spinner fa-pulse fa-fw"></i>';
                 j--;
