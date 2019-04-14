@@ -5,11 +5,23 @@ let showPlanetNames = function (linkOfTheSource) {
     $.get(linkOfTheSource, function (data) {
         for (let i = 0; i < data.results.length; i++) {
             document.querySelector('#name' + [i]).innerText = data.results[i].name;
-            document.querySelector('#diameter' + [i]).innerText = data.results[i].diameter;
+            if (data.results[i].diameter === "unknown") {
+                document.querySelector('#diameter' + [i]).innerText = 'unknown'
+            } else {
+                document.querySelector('#diameter' + [i]).innerText = data.results[i].diameter.replace(/\B(?=(\d{3})+(?!\d))/g, ",") + " km";
+            }
             document.querySelector('#climate' + [i]).innerText = data.results[i].climate;
             document.querySelector('#terrain' + [i]).innerText = data.results[i].terrain;
-            document.querySelector('#surface-water' + [i]).innerText = data.results[i].surface_water;
-            document.querySelector('#population' + [i]).innerText = data.results[i].population;
+            if (data.results[i].surface_water === "unknown") {
+                document.querySelector('#surface-water' + [i]).innerText = "unknown";
+            } else {
+                document.querySelector('#surface-water' + [i]).innerText = data.results[i].surface_water + "%"
+            }
+            if (data.results[i].population === "unknown") {
+                document.querySelector('#population' + [i]).innerText = "unknown";
+            } else {
+                document.querySelector('#population' + [i]).innerText = data.results[i].population.replace(/\B(?=(\d{3})+(?!\d))/g, ",") + " people";
+            }
             document.querySelector('#residents' + [i]).innerText = 'No known residents';
             document.querySelector('#residents' + [i]).setAttribute('data-order', [i]);
             if (data.results[i].residents.length !== 0) {
@@ -31,7 +43,7 @@ let fillUpModalOnResidentBtnClick = function (sourceLink) {
     let modalTitle = document.querySelector('.modal-title');
     planetTable.addEventListener('click', function (e) {
         clearModal();
-        console.log('target: '+ e.target);
+        console.log('target: ' + e.target);
         $.get(sourceLink, function (data) {
             console.log('target egy ' + data.results[0].residents);
             if (e.target.parentNode.tagName === "TD") {
@@ -40,7 +52,7 @@ let fillUpModalOnResidentBtnClick = function (sourceLink) {
                 let chosenArray = data.results[orderNumberFromDataAttribute].residents;
                 for (let i = 0; i < data.results[orderNumberFromDataAttribute].residents.length; i++) {
                     $.get(data.results[orderNumberFromDataAttribute].residents[i], function (resident) {
-                        console.log( resident);
+                        console.log(resident);
                         modalTable.insertAdjacentHTML('beforeend', `<tr> 
                                                                                     <td> ${resident.name}</td>
                                                                                     <td> ${resident.height}</td>
@@ -96,11 +108,23 @@ let eventListeners = function () {
                     console.log('ezt itt' + data.results[0].residents);
                     for (let i = 0; i < data.results.length; i++) {
                         document.querySelector('#name' + [i]).innerText = data.results[i].name;
-                        document.querySelector('#diameter' + [i]).innerText = data.results[i].diameter;
+                        if (data.results[i].diameter === "unknown") {
+                            document.querySelector('#diameter' + [i]).innerText = 'unknown'
+                        } else {
+                            document.querySelector('#diameter' + [i]).innerText = data.results[i].diameter.replace(/\B(?=(\d{3})+(?!\d))/g, ",") + " km";
+                        }
                         document.querySelector('#climate' + [i]).innerText = data.results[i].climate;
                         document.querySelector('#terrain' + [i]).innerText = data.results[i].terrain;
-                        document.querySelector('#surface-water' + [i]).innerText = data.results[i].surface_water;
-                        document.querySelector('#population' + [i]).innerText = data.results[i].population;
+                        if (data.results[i].surface_water === "unknown") {
+                            document.querySelector('#surface-water' + [i]).innerText = "unknown";
+                        } else {
+                            document.querySelector('#surface-water' + [i]).innerText = data.results[i].surface_water + "%"
+                        }
+                        if (data.results[i].population === "unknown") {
+                            document.querySelector('#population' + [i]).innerText = "unknown";
+                        } else {
+                            document.querySelector('#population' + [i]).innerText = data.results[i].population.replace(/\B(?=(\d{3})+(?!\d))/g, ",") + " people";
+                        }
                         document.querySelector('#residents' + [i]).innerText = 'No known residents';
                         document.querySelector('#residents' + [i]).setAttribute('data-order', [i]);
                         //console.log(data.results[0].residents);
@@ -126,11 +150,23 @@ let eventListeners = function () {
                     $.get("https://swapi.co/api/planets", function (data) {
                         for (let i = 0; i < data.results.length; i++) {
                             document.querySelector('#name' + [i]).innerText = data.results[i].name;
-                            document.querySelector('#diameter' + [i]).innerText = data.results[i].diameter;
+                            if (data.results[i].diameter === "unknown") {
+                                document.querySelector('#diameter' + [i]).innerText = 'unknown'
+                            } else {
+                                document.querySelector('#diameter' + [i]).innerText = data.results[i].diameter.replace(/\B(?=(\d{3})+(?!\d))/g, ",") + " km";
+                            }
                             document.querySelector('#climate' + [i]).innerText = data.results[i].climate;
                             document.querySelector('#terrain' + [i]).innerText = data.results[i].terrain;
-                            document.querySelector('#surface-water' + [i]).innerText = data.results[i].surface_water;
-                            document.querySelector('#population' + [i]).innerText = data.results[i].population;
+                            if (data.results[i].surface_water === "unknown") {
+                                document.querySelector('#surface-water' + [i]).innerText = "unknown";
+                            } else {
+                                document.querySelector('#surface-water' + [i]).innerText = data.results[i].surface_water + "%"
+                            }
+                            if (data.results[i].population === "unknown") {
+                                document.querySelector('#population' + [i]).innerText = "unknown";
+                            } else {
+                                document.querySelector('#population' + [i]).innerText = data.results[i].population.replace(/\B(?=(\d{3})+(?!\d))/g, ",") + " people";
+                            }
                             document.querySelector('#residents' + [i]).innerText = 'No known residents';
                             document.querySelector('#residents' + [i]).setAttribute('data-order', [i]);
                             if (data.results[i].residents.length !== 0) {
@@ -148,11 +184,23 @@ let eventListeners = function () {
                     $.get("https://swapi.co/api/planets/?page=" + j, function (data) {
                         for (let i = 0; i < data.results.length; i++) {
                             document.querySelector('#name' + [i]).innerText = data.results[i].name;
-                            document.querySelector('#diameter' + [i]).innerText = data.results[i].diameter;
+                            if (data.results[i].diameter === "unknown") {
+                                document.querySelector('#diameter' + [i]).innerText = 'unknown'
+                            } else {
+                                document.querySelector('#diameter' + [i]).innerText = data.results[i].diameter.replace(/\B(?=(\d{3})+(?!\d))/g, ",") + " km";
+                            }
                             document.querySelector('#climate' + [i]).innerText = data.results[i].climate;
                             document.querySelector('#terrain' + [i]).innerText = data.results[i].terrain;
-                            document.querySelector('#surface-water' + [i]).innerText = data.results[i].surface_water;
-                            document.querySelector('#population' + [i]).innerText = data.results[i].population;
+                            if (data.results[i].surface_water === "unknown") {
+                                document.querySelector('#surface-water' + [i]).innerText = "unknown";
+                            } else {
+                                document.querySelector('#surface-water' + [i]).innerText = data.results[i].surface_water + "%"
+                            }
+                            if (data.results[i].population === "unknown") {
+                                document.querySelector('#population' + [i]).innerText = "unknown";
+                            } else {
+                                document.querySelector('#population' + [i]).innerText = data.results[i].population.replace(/\B(?=(\d{3})+(?!\d))/g, ",") + " people";
+                            }
                             document.querySelector('#residents' + [i]).innerText = 'No known residents';
                             document.querySelector('#residents' + [i]).setAttribute('data-order', [i]);
                             if (data.results[i].residents.length !== 0) {
