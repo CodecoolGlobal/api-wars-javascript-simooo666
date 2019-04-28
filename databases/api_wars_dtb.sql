@@ -5,9 +5,9 @@
 -- Dumped from database version 9.5.6
 -- Dumped by pg_dump version 9.5.6
 
-ALTER TABLE IF EXISTS users DROP CONSTRAINT IF EXISTS pk_users_id CASCADE;
-ALTER TABLE IF EXISTS planet_votes DROP CONSTRAINT IF EXISTS pk_planet_votes_id CASCADE;
-ALTER TABLE IF EXISTS planet_votes DROP CONSTRAINT IF EXISTS fk_user_id CASCADE;
+ALTER TABLE IF EXISTS users DROP CONSTRAINT IF EXISTS users_pkey CASCADE;
+ALTER TABLE IF EXISTS planet_votes DROP CONSTRAINT IF EXISTS planet_votes_pkey CASCADE;
+ALTER TABLE IF EXISTS users DROP CONSTRAINT IF EXISTS planet_votes_user_id_fkey CASCADE;
 
 
 DROP TABLE IF EXISTS users;

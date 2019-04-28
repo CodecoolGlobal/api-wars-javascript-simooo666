@@ -1,55 +1,62 @@
 let sourceOfPlanets = "https://swapi.co/api/planets";
 let loadingSign = document.querySelector('#loading');
 
-let showPlanetNames = function (linkOfTheSource) {
-    $.get(linkOfTheSource, function (data) {
-        for (let i = 0; i < data.results.length; i++) {
-            document.querySelector('#name' + [i]).innerText = data.results[i].name;
-            if (data.results[i].diameter === "unknown") {
-                document.querySelector('#diameter' + [i]).innerText = 'unknown'
-            } else {
-                document.querySelector('#diameter' + [i]).innerText = data.results[i].diameter.replace(/\B(?=(\d{3})+(?!\d))/g, ",") + " km";
-            }
-            document.querySelector('#climate' + [i]).innerText = data.results[i].climate;
-            document.querySelector('#terrain' + [i]).innerText = data.results[i].terrain;
-            if (data.results[i].surface_water === "unknown") {
-                document.querySelector('#surface-water' + [i]).innerText = "unknown";
-            } else {
-                document.querySelector('#surface-water' + [i]).innerText = data.results[i].surface_water + "%"
-            }
-            if (data.results[i].population === "unknown") {
-                document.querySelector('#population' + [i]).innerText = "unknown";
-            } else {
-                document.querySelector('#population' + [i]).innerText = data.results[i].population.replace(/\B(?=(\d{3})+(?!\d))/g, ",") + " people";
-            }
-            document.querySelector('#residents' + [i]).innerText = 'No known residents';
-            document.querySelector('#residents' + [i]).setAttribute('data-order', [i]);
-            if (data.results[i].residents.length !== 0) {
-                let btn = document.createElement('button');
-                document.querySelector('#residents' + [i]).innerText = '';
-                btn.innerText = data.results[i].residents.length + ' resident(s)';
-                btn.setAttribute('data-target', "#exampleModal");
-                btn.setAttribute('data-toggle', "modal");
-                document.querySelector('#residents' + [i]).appendChild(btn);
-            }
+let fillUpTable = function (data) {
+    console.log(data);
+    for (let i = 0; i < data.results.length; i++) {
+        document.querySelector('#name' + [i]).innerText = data.results[i].name;
+        if (data.results[i].diameter === "unknown") {
+            document.querySelector('#diameter' + [i]).innerText = 'unknown'
+        } else {
+            document.querySelector('#diameter' + [i]).innerText = data.results[i].diameter.replace(/\B(?=(\d{3})+(?!\d))/g, ",") + " km";
         }
-    });
-    fillUpModalOnResidentBtnClick(linkOfTheSource)
+        document.querySelector('#climate' + [i]).innerText = data.results[i].climate;
+        document.querySelector('#terrain' + [i]).innerText = data.results[i].terrain;
+        if (data.results[i].surface_water === "unknown") {
+            document.querySelector('#surface-water' + [i]).innerText = "unknown";
+        } else {
+            document.querySelector('#surface-water' + [i]).innerText = data.results[i].surface_water + "%"
+        }
+        if (data.results[i].population === "unknown") {
+            document.querySelector('#population' + [i]).innerText = "unknown";
+        } else {
+            document.querySelector('#population' + [i]).innerText = data.results[i].population.replace(/\B(?=(\d{3})+(?!\d))/g, ",") + " people";
+        }
+        document.querySelector('#residents' + [i]).innerText = 'No known residents';
+        document.querySelector('#residents' + [i]).setAttribute('data-order', [i]);
+        if (data.results[i].residents.length !== 0) {
+            let btn = document.createElement('button');
+            document.querySelector('#residents' + [i]).innerText = '';
+            btn.innerText = data.results[i].residents.length + ' resident(s)';
+            btn.setAttribute('data-target', "#exampleModal");
+            btn.setAttribute('data-toggle', "modal");
+            document.querySelector('#residents' + [i]).appendChild(btn);
+        }
+    }
 };
 
-let fillUpModalOnResidentBtnClick = function (sourceLink) {
+
+let showPlanetNames = function (linkOfTheSource) {
+    document.querySelector('#planets-table').dataset.pageNumber = 1;
+    $.get(linkOfTheSource, function (data) {
+        fillUpTable(data)
+    });
+};
+
+let fillUpModalOnResidentBtnClick = function () {
     let planetTable = document.querySelector('#planets-table');
     let modalTable = document.querySelector('#modal-table');
     let modalTitle = document.querySelector('.modal-title');
     planetTable.addEventListener('click', function (e) {
         clearModal();
-        console.log('target: ' + e.target);
+        let pageNumber = document.querySelector('#planets-table').getAttribute('data-page-number');
+        let sourceLink = "https://swapi.co/api/planets/?page=" + pageNumber ;
         $.get(sourceLink, function (data) {
-            console.log('target egy ' + data.results[0].residents);
             if (e.target.parentNode.tagName === "TD") {
+                console.log(data)
                 let orderNumberFromDataAttribute = e.target.parentNode.getAttribute('data-order');
                 modalTitle.innerText = 'Residents of ' + data.results[orderNumberFromDataAttribute].name;
-                let chosenArray = data.results[orderNumberFromDataAttribute].residents;
+                //let chosenArray = data.results[orderNumberFromDataAttribute].residents;
                 for (let i = 0; i < data.results[orderNumberFromDataAttribute].residents.length; i++) {
                     $.get(data.results[orderNumberFromDataAttribute].residents[i], function (resident) {
                         console.log(resident);
@@ -95,129 +102,33 @@ let clearTable = function () {
 };
 
 
-let j = 1;
-
-
-let eventListeners = function () {
+let eventListeners = function (linkOfTheSource) {
+    let pageNumber = document.querySelector('#planets-table').getAttribute('data-page-number');
     let btns = document.querySelector('.wrap-around-btns');
     btns.addEventListener('click', function (e) {
-            if (e.target.id === 'btn-next' && j < 7) {
+            if (e.target.id === 'btn-next' && pageNumber < 7) {
                 loadingSign.innerHTML = '<i class="fa fa-spinner fa-pulse fa-fw"></i>';
-                j++;
-                $.get("https://swapi.co/api/planets/?page=" + j, function (data) {
-                    console.log('ezt itt' + data.results[0].residents);
-                    for (let i = 0; i < data.results.length; i++) {
-                        document.querySelector('#name' + [i]).innerText = data.results[i].name;
-                        if (data.results[i].diameter === "unknown") {
-                            document.querySelector('#diameter' + [i]).innerText = 'unknown'
-                        } else {
-                            document.querySelector('#diameter' + [i]).innerText = data.results[i].diameter.replace(/\B(?=(\d{3})+(?!\d))/g, ",") + " km";
-                        }
-                        document.querySelector('#climate' + [i]).innerText = data.results[i].climate;
-                        document.querySelector('#terrain' + [i]).innerText = data.results[i].terrain;
-                        if (data.results[i].surface_water === "unknown") {
-                            document.querySelector('#surface-water' + [i]).innerText = "unknown";
-                        } else {
-                            document.querySelector('#surface-water' + [i]).innerText = data.results[i].surface_water + "%"
-                        }
-                        if (data.results[i].population === "unknown") {
-                            document.querySelector('#population' + [i]).innerText = "unknown";
-                        } else {
-                            document.querySelector('#population' + [i]).innerText = data.results[i].population.replace(/\B(?=(\d{3})+(?!\d))/g, ",") + " people";
-                        }
-                        document.querySelector('#residents' + [i]).innerText = 'No known residents';
-                        document.querySelector('#residents' + [i]).setAttribute('data-order', [i]);
-                        //console.log(data.results[0].residents);
-                        if (data.results[i].residents.length !== 0) {
-                            let btn = document.createElement('button');
-                            document.querySelector('#residents' + [i]).innerText = '';
-                            btn.innerText = data.results[i].residents.length + ' resident(s)';
-                            btn.setAttribute('data-target', "#exampleModal");
-                            btn.setAttribute('data-toggle', "modal");
-                            document.querySelector('#residents' + [i]).appendChild(btn);
-                        }
-                    }
-                    console.log(j);
-                    console.log(data);
+                pageNumber++;
+                document.querySelector('#planets-table').dataset.pageNumber = pageNumber;
+                $.get("https://swapi.co/api/planets/?page=" + pageNumber, function (data) {
+                    fillUpTable(data);
                     loadingSign.innerHTML = '';
                 });
-                fillUpModalOnResidentBtnClick("https://swapi.co/api/planets/?page=" + j);
 
-            } else if (e.target.id === 'btn-prev' && j > 1) {
+            } else if (e.target.id === 'btn-prev' && pageNumber > 1) {
                 loadingSign.innerHTML = '<i class="fa fa-spinner fa-pulse fa-fw"></i>';
-                j--;
-                if (j === 1) {
-                    $.get("https://swapi.co/api/planets", function (data) {
-                        for (let i = 0; i < data.results.length; i++) {
-                            document.querySelector('#name' + [i]).innerText = data.results[i].name;
-                            if (data.results[i].diameter === "unknown") {
-                                document.querySelector('#diameter' + [i]).innerText = 'unknown'
-                            } else {
-                                document.querySelector('#diameter' + [i]).innerText = data.results[i].diameter.replace(/\B(?=(\d{3})+(?!\d))/g, ",") + " km";
-                            }
-                            document.querySelector('#climate' + [i]).innerText = data.results[i].climate;
-                            document.querySelector('#terrain' + [i]).innerText = data.results[i].terrain;
-                            if (data.results[i].surface_water === "unknown") {
-                                document.querySelector('#surface-water' + [i]).innerText = "unknown";
-                            } else {
-                                document.querySelector('#surface-water' + [i]).innerText = data.results[i].surface_water + "%"
-                            }
-                            if (data.results[i].population === "unknown") {
-                                document.querySelector('#population' + [i]).innerText = "unknown";
-                            } else {
-                                document.querySelector('#population' + [i]).innerText = data.results[i].population.replace(/\B(?=(\d{3})+(?!\d))/g, ",") + " people";
-                            }
-                            document.querySelector('#residents' + [i]).innerText = 'No known residents';
-                            document.querySelector('#residents' + [i]).setAttribute('data-order', [i]);
-                            if (data.results[i].residents.length !== 0) {
-                                let btn = document.createElement('button');
-                                document.querySelector('#residents' + [i]).innerText = '';
-                                btn.innerText = data.results[i].residents.length + ' resident(s)';
-                                btn.setAttribute('data-target', "#exampleModal");
-                                btn.setAttribute('data-toggle', "modal");
-                                document.querySelector('#residents' + [i]).appendChild(btn);
-                            }
-                        }
-                        loadingSign.innerHTML = '';
-                    })
-                } else {
-                    $.get("https://swapi.co/api/planets/?page=" + j, function (data) {
-                        for (let i = 0; i < data.results.length; i++) {
-                            document.querySelector('#name' + [i]).innerText = data.results[i].name;
-                            if (data.results[i].diameter === "unknown") {
-                                document.querySelector('#diameter' + [i]).innerText = 'unknown'
-                            } else {
-                                document.querySelector('#diameter' + [i]).innerText = data.results[i].diameter.replace(/\B(?=(\d{3})+(?!\d))/g, ",") + " km";
-                            }
-                            document.querySelector('#climate' + [i]).innerText = data.results[i].climate;
-                            document.querySelector('#terrain' + [i]).innerText = data.results[i].terrain;
-                            if (data.results[i].surface_water === "unknown") {
-                                document.querySelector('#surface-water' + [i]).innerText = "unknown";
-                            } else {
-                                document.querySelector('#surface-water' + [i]).innerText = data.results[i].surface_water + "%"
-                            }
-                            if (data.results[i].population === "unknown") {
-                                document.querySelector('#population' + [i]).innerText = "unknown";
-                            } else {
-                                document.querySelector('#population' + [i]).innerText = data.results[i].population.replace(/\B(?=(\d{3})+(?!\d))/g, ",") + " people";
-                            }
-                            document.querySelector('#residents' + [i]).innerText = 'No known residents';
-                            document.querySelector('#residents' + [i]).setAttribute('data-order', [i]);
-                            if (data.results[i].residents.length !== 0) {
-                                let btn = document.createElement('button');
-                                document.querySelector('#residents' + [i]).innerText = '';
-                                btn.innerText = data.results[i].residents.length + ' resident(s)';
-                                btn.setAttribute('data-target', "#exampleModal");
-                                btn.setAttribute('data-toggle', "modal");
-                                document.querySelector('#residents' + [i]).appendChild(btn);
-                            }
-                        }
-                        loadingSign.innerHTML = '';
-                    })
-                }
+                pageNumber--;
+                document.querySelector('#planets-table').dataset.pageNumber = pageNumber;
+                $.get("https://swapi.co/api/planets/?page=" + pageNumber, function (data) {
+                    fillUpTable(data);
+                    loadingSign.innerHTML = '';
+                })
+
             }
         }
     );
+    fillUpModalOnResidentBtnClick()
+
 };
 
 showPlanetNames(sourceOfPlanets);
