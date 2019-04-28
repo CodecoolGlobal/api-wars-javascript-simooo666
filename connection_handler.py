@@ -17,7 +17,7 @@ def get_connection_string():
         port=url.port
     )
     if connection:
-       return connection
+        return connection
     else:
         raise KeyError('Some necessary environment variable(s) are not defined')
 
